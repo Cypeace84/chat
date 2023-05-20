@@ -83,6 +83,7 @@ p {
     animation-duration: 3s;
 }
 
+
 .message__author {
   font-size: 0.8rem;
   font-weight: bold;
@@ -98,6 +99,10 @@ p {
   color: #fff;
   font-size: 0.9rem;
   max-width: 200px;
+}
+
+.message__content--italic {
+  font-style: italic;
 }
 
 .message--self .message__content {

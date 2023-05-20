@@ -5,6 +5,11 @@ const addMessageForm = document.getElementById('add-messages-form');
 const userNameInput = document.getElementById('username');
 const messageContentInput = document.getElementById('message-content');
 
+const socket = io();
+
+// socket.on('message', addMessage);
+socket.on('message', (event) => addMessage(event.author, event.content));
+
 let userName = '';
 
 messageContentInput.setAttribute('autocomplete', 'off');
@@ -18,19 +23,22 @@ const login = (event) => {
     return;
   }
   userName = enteredUserName;
-
+  socket.emit('join', userName);
   loginForm.classList.remove('show');
   messagesSection.classList.add('show');
 };
 
-function addMessage(author, content) {
+function addMessage(author, content, isSystemMessage) {
+  console.log('isSystemMessage:', isSystemMessage, author);
   const message = document.createElement('li');
   message.classList.add('message');
   message.classList.add('message--received');
   if (author === userName) message.classList.add('message--self');
   message.innerHTML = `
     <h3 class="message__author">${userName === author ? 'You' : author}</h3>
-    <div class="message__content">
+    <div class="message__content ${
+      isSystemMessage ? ' message__content--italic' : ''
+    }">
       ${content}
     </div>
   `;
@@ -38,13 +46,14 @@ function addMessage(author, content) {
 }
 const sendMessage = (event) => {
   event.preventDefault();
-  const enteredMessage = messageContentInput.value;
+  let enteredMessage = messageContentInput.value;
 
   if (enteredMessage === '') {
     alert('Please enter your message');
     return;
   }
   addMessage(userName, enteredMessage);
+  socket.emit('message', { author: userName, content: enteredMessage });
   messageContentInput.value = '';
 };
 
