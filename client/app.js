@@ -8,7 +8,9 @@ const messageContentInput = document.getElementById('message-content');
 const socket = io();
 
 // socket.on('message', addMessage);
-socket.on('message', (event) => addMessage(event.author, event.content));
+socket.on('message', (event) =>
+  addMessage(event.author, event.content, event.isSystemMessage)
+);
 
 let userName = '';
 

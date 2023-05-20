@@ -27,7 +27,11 @@ io.on('connection', (socket) => {
     );
     messages.push(message);
     console.log('messages:', messages);
-    socket.broadcast.emit('message', message);
+    socket.broadcast.emit('message', {
+      author: message.author,
+      content: message.content,
+      isSystemMessage: false, // Ustawiamy wartość na false dla zwykłej wiadomości
+    });
   });
 
   socket.on('join', (name) => {
